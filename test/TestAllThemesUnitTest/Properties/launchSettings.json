@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TestAllThemesUnitTest": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

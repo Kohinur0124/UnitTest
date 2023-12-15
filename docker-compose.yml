@@ -1,0 +1,49 @@
+version: '3.4'
+
+networks:
+    backend:
+
+services:
+
+  dbtestallthemes:
+    container_name: dbtestallthemes-container
+    image:  mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Word!5434#
+    ports:
+      - 1777:1433 
+    networks:
+      - backend
+    volumes:
+      - c:\mssql:/var/opt/mssql/data
+
+
+  testallthemess.api:
+    image: ${DOCKER_REGISTRY-}testallthemessapi
+    build:
+      context: .
+      dockerfile: src/TestAllThemess.Api/Dockerfile
+    networks:
+      - backend
+    ports:
+      - 1456:80
+  
+    environment:
+        - DB_HOST=dbtestallthemes
+        - DB_NAME=testallthemesdb
+        - SA_PASSWORD=Word!5434#
+  redis:
+    container_name: redis-container
+    image: redis:latest
+    # restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+  testallthemesunittest:
+    image: ${DOCKER_REGISTRY-}testallthemesunittest
+    build:
+      context: .
+      dockerfile: test/TestAllThemesUnitTest/Dockerfile
+
